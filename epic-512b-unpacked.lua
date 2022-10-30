@@ -66,30 +66,32 @@ function TIC()
     )
   end
   t = t + 1, t < 8063 or exit()
-  cls()
+  cls(2)
   for j = 0, 47 do
     poke(16320 + j, 19 * d[-3] / (1 + 2 ^ (5 - s(j % 3 + d[3]) - j / 5)))
+    --poke(16320 + j, 255 / (1 + 2 ^ (5 - s(j % 3 + d[3] / 99) - j / 5)))
   end
   lx = s(t / 99) * 50 + 120
   ly = s(t / 79) * 50 + 68
 
-  for z = 15, 1, -1 do
-    u = z / 15 + 1
-    circ(lx, ly, 25 * u, -z / 2 - 8)
-    for k = 0, 20 do
+  circ(lx, ly, 50, 0)
+
+  for a = 14, 1, -1 do
+    u = a * a * (d[-3] + 14) / 200 / 14 + 1
+    for k = .5, 20 do
       y = 1 - k / 10
-      r = (1 - y * y) ^ .5 * 50
-      w = d[4] / 99 + k * 5
-      x = r * s(2.4 * k + 8 + w) + lx
-      a = s(2.4 * k + w)
-      y = y * r + ly
-      x = (x - lx) * u + lx
-      y = (y - ly) * u + ly
-      func[1](x, y, z + u, -z)
+      r = (1 - y * y) ^ .5
+      w = d[4] / 99 + t / 29
+      n = s(t / 1e4) * 2.4
+      x = r * s(n * k + 8 + w)
+      z = r * s(n * k + w)
+      xx = 50 * x * u + lx
+      yy = 50 * y * u + ly
+      func[1](xx, yy, (a + u) * math.atan(math.max(((x * u) ^ 2 - r ^ 2) * 10, z * 10)), -a)
     end
-    y = (d[0] - 6) * u * 12 + 68
+    y = (d[0] - 6) * u * 12 + 67
     w = u * 5
-    rect(0, y - w, 240, w * 2, -z)
+    rect(0, y - w, 240, w * 2, -a)
   end
 
 
