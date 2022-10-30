@@ -1,54 +1,54 @@
 -- exported from crackle tracker
+--{
 d = {
 
-  -- start 1, length 80: patterns
+  -- start 1, length 16: key patterns
+  1, 1, 1, 1,
+  1, 1, 0, 1,
+  1, 3, 5, 2,
+  1, 3, 0, 1,
+
+  -- start 17, length 80: patterns
   1, 0, 5, 3, 4, 0, 7, 0, 1, 0, 3, 4, 5, 5, 4, 3,
   1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0,
   1, 7, 7, 1, 7, 7, 1, 7, 1, 7, 7, 1, 7, 7, 1, 7,
   1, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 0, 0, 1, 0,
   1, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 1,
 
-  -- start 81, length 16: key patterns
-  1, 1, 1, 1, 1, 3, 5, 2, 1, 1, 0, 1, 1, 3, 0, 1,
-
   -- start 97, length 4: channel speeds
-  -2, 1, 0, 0,
+  -2, 1, -- 0, 0, from following
 
-  -- 101 orderlist
+  -- 99 orderlist
   0, 0, 0, 5, 5, 1, 1, 1, 5,
   2, 2, 3, 3, 3, 3, 3, 3, 0,
   0, 1, 2, 2, 1, 1, 1, 1, 2,
   2, 2, 4, 5, 5, 5, 5, 5, 4,
-  -- 137 keylist
-  2, 2, 0, 0, 3, 3, 3, 1, 0,
-
-}
-
-t = 0
-
-func = {
+  -- 135 keylist
+  1, 1, 0, 0, 3, 3, 3, 2, 0,
+  -- 144
   function(x, y, r, c) rect(0, x - r, 240, r * 2, c) end,
   circ,
   function(x, y, r, c) rect(x - r, 0, r * 2, 240, c) end,
 }
 
+t = 0
+
 function TIC()
-  for k = 0, 3 do
+  for k = 3, 0, -1 do
     p = t // 896 -- orderlist pos
     poke(65896, 32) -- set chn 2 wave
     e = t << d[k + 97] -- envelope pos
     -- n is note (semitones), 0=no note
     n = d[
-        16 * d[9 * k + p + 101] + -15 -- patstart
-            + e // 14 % 16] or 0 -- can sometimes be removed
+        16 * d[9 * k + p + 99] + 1 -- patstart
+            + e // 14 % 16] -- can sometimes be removed
     -- save envelopes for syncs
     -- d[0] = chn 0, d[-1] = chn 1...
     -- % ensures if n=0|pat=0 then env=0
-    d[-k] = -e % 14 % (16 * n * d[9 * k + p + 101] + 1)
-    u = d[4 * d[9 * 4 + p + 101] + 81 + t // 224 % 4]
+    d[-k] = -e % 14 % (16 * n * d[9 * k + p + 99] + 1)
+    u = d[4 * d[9 * 4 + p + 99] + 1 + t // 224 % 4]
 
-    n = (n - 1 - u // 2 * 2) * 7 // 6
-    n = (n + u + 1) * 12 // 7
+    n = ((n - 1 - u // 2 * 2) * 7 // 6 + u + 1) * 12 // 7
     sfx(
       k, -- channel k uses wave k
       8 -- global pitch:
@@ -61,40 +61,38 @@ function TIC()
       d[-k]-- stored envelope
     )
   end
-  t = t + 1, t < 8063 or exit()
   cls(3)
   for j = 0, 47 do
     poke(16320 + j, 255 / (1 + 2 ^ (5 - s(j % 3 + p) - j / 5 - d[-3] * .2)) ^ 2)
   end
-  lx = s(p % 4 * (t / 49 + s(t / 99))) * 52 + 120
-  ly = s(p % 4 * (t / 69 + s(t / 79))) * 52 + 68
 
-  func[p % 3 + 1](lx, ly, 50, 0)
+  d[p % 3 + 144](
+    s(p % 8 * (t / 199 + s(t / 99))) * 52 + 120,
+    s(p % 8 * (t / 179 + s(t / 79))) * 52 + 68, 50, 0)
 
   for a = 13, 1, -1 do
     u = a * a * (d[-3] + 14) / 400 / 14 + 1
     for k = .5, 10 do
-      w = t / 29
-      y = 1 - k / 5
-      y = (p + 1) % 3 // 2 * y
+      y = (p + 1) % 3 // 2 * (1 - k / 5)
       r = (1 - y * y) ^ .5
-      n = 1.3 * (p - 1)
-      x = r * s(n * k + 8 + w)
-      z = r * s(n * k + w)
-      h = math.atan(math.max(u * (x ^ 2 + y ^ 2) ^ .5 - 1, z) * 10) * d[-2] / 3 - 1
+      e = p // 3 * 3.9
+      x = r * s(e * k + 8 + t / 29)
+      h = math.atan(math.max(u * (x ^ 2 + y ^ 2) ^ .5 - 1, r * s(e * k + t / 29)) * 10) * d[-2] / 4 - 1
 
-      func[p % 3 + 1](
-        52 * x * u + lx,
-        52 * y * u + ly,
+      d[p % 3 + 144](
+        52 * x * u + s(p % 8 * (t / 199 + s(t / 99))) * 52 + 120,
+        52 * y * u + s(p % 8 * (t / 179 + s(t / 79))) * 52 + 68,
         (a + u) * h,
         -a)
     end
-    y = (d[0] - 6) * u * 19 + 99
-    func[1 + p % 2 * 2](y, y, u * 10, -a)
+    d[146 - n // 2 % 2 * 2]((.5 - n % 2) * (d[0] - 6) * u * 50 + 120, 0, u * 10, -a)
   end
+  t = t + 1, t < 8063 or exit()
 end
 
 s = math.sin
+--}
+
 -- <TILES>
 -- 001:eccccccccc888888caaaaaaaca888888cacccccccacc0ccccacc0ccccacc0ccc
 -- 002:ccccceee8888cceeaaaa0cee888a0ceeccca0ccc0cca0c0c0cca0c0c0cca0c0c
