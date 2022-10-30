@@ -1,6 +1,6 @@
 -- exported from crackle tracker
 d = {
-  0, 0, 0, 0,
+
   -- start 1, length 80: patterns
   1, 0, 5, 3, 4, 0, 7, 0, 1, 0, 3, 4, 5, 5, 4, 3,
   1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0,
@@ -27,29 +27,25 @@ d = {
 t = 0
 
 func = {
+  function(x, y, r, c) rect(0, x - r, 240, r * 2, c) end,
   circ,
-  function(x, y, r, c) rect(x - r / 4, 0, r / 2, 136, c) end,
-  function(x, y, r, c) rect(x - r, y - r, 2 * r, 2 * r, c) end
+  function(x, y, r, c) rect(x - r, 0, r * 2, 240, c) end,
 }
 
 function TIC()
   for k = 0, 3 do
     p = t // 896 -- orderlist pos
     poke(65896, 32) -- set chn 2 wave
-    e = t << d[k + 101] -- envelope pos
+    e = t << d[k + 97] -- envelope pos
     -- n is note (semitones), 0=no note
     n = d[
-        16 * d[9 * k + p + 105] + -11 -- patstart
+        16 * d[9 * k + p + 101] + -15 -- patstart
             + e // 14 % 16] or 0 -- can sometimes be removed
     -- save envelopes for syncs
     -- d[0] = chn 0, d[-1] = chn 1...
     -- % ensures if n=0|pat=0 then env=0
-    d[-k] = -e % 14 % (16 * n * d[9 * k + p + 105] + 1)
-
-    d[k + 1] = d[k + 1] + d[-k]
-
-
-    u = d[4 * d[9 * 4 + p + 105] + 85 + t // 224 % 4]
+    d[-k] = -e % 14 % (16 * n * d[9 * k + p + 101] + 1)
+    u = d[4 * d[9 * 4 + p + 101] + 81 + t // 224 % 4]
 
     n = (n - 1 - u // 2 * 2) * 7 // 6
     n = (n + u + 1) * 12 // 7
@@ -66,36 +62,36 @@ function TIC()
     )
   end
   t = t + 1, t < 8063 or exit()
-  cls(2)
+  cls(3)
   for j = 0, 47 do
     poke(16320 + j, 255 / (1 + 2 ^ (5 - s(j % 3 + p) - j / 5 - d[-3] * .2)) ^ 2)
-    --poke(16320 + j, 255 / (1 + 2 ^ (5 - s(j % 3 + d[3] / 99) - j / 5)))
   end
-  lx = s(t * p / 99) * 50 + 120
-  ly = s(t * p / 79) * 50 + 68
+  lx = s(p % 4 * (t / 49 + s(t / 99))) * 52 + 120
+  ly = s(p % 4 * (t / 69 + s(t / 79))) * 52 + 68
 
-  circ(lx, ly, 50, 0)
+  func[p % 3 + 1](lx, ly, 50, 0)
 
-  for a = 14, 1, -1 do
+  for a = 13, 1, -1 do
     u = a * a * (d[-3] + 14) / 400 / 14 + 1
-    for k = .5, 40 do
-      w = d[4] / 99 + t / 29
-      y = 1 - k / 20
+    for k = .5, 10 do
+      w = t / 29
+      y = 1 - k / 5
+      y = (p + 1) % 3 // 2 * y
       r = (1 - y * y) ^ .5
-      n = 2.4 * (p - 1)
+      n = 1.3 * (p - 1)
       x = r * s(n * k + 8 + w)
       z = r * s(n * k + w)
       h = math.atan(math.max(u * (x ^ 2 + y ^ 2) ^ .5 - 1, z) * 10) * d[-2] / 3 - 1
-      xx = 50 * x * u + lx
-      yy = 50 * y * u + ly
-      func[1](xx, yy, (a + u) * h, -a)
+
+      func[p % 3 + 1](
+        52 * x * u + lx,
+        52 * y * u + ly,
+        (a + u) * h,
+        -a)
     end
-    y = (d[0] - 6) * u * 12 + 67
-    w = u * 5
-    rect(0, y - w, 240, w * 2, -a)
+    y = (d[0] - 6) * u * 19 + 99
+    func[1 + p % 2 * 2](y, y, u * 10, -a)
   end
-
-
 end
 
 s = math.sin
