@@ -26,16 +26,6 @@ d = {
 
 t = 0
 
-function land(x, y, l)
-  return s(s(x) + s(y) + x) * 2 + (l > 0 and .7 * land(2 * x, 2 * y, l - 1) or 0)
-end
-
-function corner(u, v)
-  h = land(u / 6, v / 6, 3)
-  zz = u - m
-  return v * 99 / zz + 120, (h - h0 + 3) * 99 / zz + 68
-end
-
 func = {
   circ,
   function(x, y, r, c) rect(x - r / 4, 0, r / 2, 136, c) end,
@@ -80,12 +70,21 @@ function TIC()
   for j = 0, 47 do
     poke(16320 + j, 19 * d[-3] / (1 + 2 ^ (5 - s(j % 3 + d[3]) - j / 5)))
   end
+  lx = s(t / 99) * 50 + 120
+  ly = s(t / 79) * 50 + 68
+
   for z = 15, 1, -1 do
     u = z / 15 + 1
-    for k = 0, 19 do
-      w = k * 5 + d[4] / 99
-      x = s(w) * u * 55 + 120
-      y = s(k / 2) * u * 55 + 68
+    circ(lx, ly, 25 * u, -z / 2 - 8)
+    for k = 0, 20 do
+      y = 1 - k / 10
+      r = (1 - y * y) ^ .5 * 50
+      w = d[4] / 99 + k * 5
+      x = r * s(2.4 * k + 8 + w) + lx
+      a = s(2.4 * k + w)
+      y = y * r + ly
+      x = (x - lx) * u + lx
+      y = (y - ly) * u + ly
       func[1](x, y, z + u, -z)
     end
     y = (d[0] - 6) * u * 12 + 68
