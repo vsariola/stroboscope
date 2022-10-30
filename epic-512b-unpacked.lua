@@ -1,5 +1,6 @@
 -- exported from crackle tracker
 d = {
+  0, 0, 0, 0,
   -- start 1, length 80: patterns
   1, 0, 5, 3, 4, 0, 7, 0, 1, 0, 3, 4, 5, 5, 4, 3,
   1, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 0, 1, 0,
@@ -35,21 +36,30 @@ function corner(u, v)
   return v * 99 / zz + 120, (h - h0 + 3) * 99 / zz + 68
 end
 
+func = {
+  circ,
+  function(x, y, r, c) rect(x - r / 4, 0, r / 2, 136, c) end,
+  function(x, y, r, c) rect(x - r, y - r, 2 * r, 2 * r, c) end
+}
+
 function TIC()
   for k = 0, 3 do
     p = t // 896 -- orderlist pos
     poke(65896, 32) -- set chn 2 wave
-    e = t << d[k + 97] -- envelope pos
+    e = t << d[k + 101] -- envelope pos
     -- n is note (semitones), 0=no note
     n = d[
-        16 * d[9 * k + p + 101] + -15 -- patstart
+        16 * d[9 * k + p + 105] + -11 -- patstart
             + e // 14 % 16] or 0 -- can sometimes be removed
     -- save envelopes for syncs
     -- d[0] = chn 0, d[-1] = chn 1...
     -- % ensures if n=0|pat=0 then env=0
-    d[-k] = -e % 14 % (16 * n * d[9 * k + p + 101] + 1)
+    d[-k] = -e % 14 % (16 * n * d[9 * k + p + 105] + 1)
 
-    u = d[4 * d[9 * 4 + p + 101] + 81 + t // 224 % 4]
+    d[k + 1] = d[k + 1] + d[-k]
+
+
+    u = d[4 * d[9 * 4 + p + 105] + 85 + t // 224 % 4]
 
     n = (n - 1 - u // 2 * 2) * 7 // 6
     n = (n + u + 1) * 12 // 7
@@ -67,26 +77,22 @@ function TIC()
   end
   t = t + 1, t < 8063 or exit()
   cls()
-  for i = 0, 47 do
-    c = i;
-    circ(120, 68, 180 - i * 3, -c / 5 + c * .8 % 1)
-    poke(16320 + i, s(i / 15) ^ 2 * 255)
+  for j = 0, 47 do
+    poke(16320 + j, 19 * d[-3] / (1 + 2 ^ (5 - s(j % 3 + d[3]) - j / 5)))
   end
-  m = t / 29
-  h0 = land(m / 6, 0, 1) + d[-3] / 30
-  for z = 30, 1, -1 do
-    for i = -15, 15 do
-      u = z + m // 1
-      v = i
-      A, B = corner(u, v)
-      C, D = corner(u + 1, v + 1)
-      E, F = corner(u, v + 1)
-      G, H = corner(u + 1, v)
-      h=u~v
-      tri(A, B, C, D, E, F, -h + 4)
-      tri(A, B, C, D, G, H, -h + 4)
+  for z = 15, 1, -1 do
+    u = z / 15 + 1
+    for k = 0, 19 do
+      w = k * 5 + d[4] / 99
+      x = s(w) * u * 55 + 120
+      y = s(k / 2) * u * 55 + 68
+      func[1](x, y, z + u, -z)
     end
+    y = (d[0] - 6) * u * 12 + 68
+    w = u * 5
+    rect(0, y - w, 240, w * 2, -z)
   end
+
 
 end
 
@@ -119,4 +125,3 @@ s = math.sin
 -- <PALETTE>
 -- 000:1a1c2c5d275db13e53ef7d57ffcd75a7f07038b76425717929366f3b5dc941a6f673eff7f4f4f494b0c2566c86333c57
 -- </PALETTE>
-
