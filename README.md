@@ -1,7 +1,7 @@
-# stroboscopic - TIC-80 512b intro - Inércia 2022
+# stroboscope - TIC-80 512b intro - Inércia 2022
 
 This repository contains the unpacked source for the TIC-80 512b intro
-"stroboscopic", made by pestis / brainlez Coders! and released at Inércia 2022
+"stroboscope", made by pestis / brainlez Coders! and released at Inércia 2022
 512b compo.
 
 Tested with TIC-80 1.0.2164 pro. Packed with
