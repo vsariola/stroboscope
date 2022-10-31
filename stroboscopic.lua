@@ -28,9 +28,9 @@ d = {
   3, 3, 4, 5, 5, 5, 5, 5, 4,
 
   -- 142
-  function(x, r, r, a) rect(0, x - r, 240, r * 2, a) end,
+  function(n, u, u, a) rect(0, n - u, 240, u * 2, a) end,
   circ,
-  function(x, r, r, a) rect(x - r, 0, r * 2, 240, a) end,
+  function(n, u, u, a) rect(n - u, 0, u * 2, 240, a) end,
 }
 
 t = 0
@@ -78,13 +78,17 @@ function TIC()
     u = 1 + a * a * (d[-3] + 14) / 6000
     for k = .5, 10 do
       y = (1 + p) % 3 // 2 * (1 - k / 5)
-      r = (1 - y * y) ^ .5
-      x = r * s(p // 3 * k * 4 + t / 18 + 8)
+      x = (1 - y * y) ^ .5 * s(p // 3 * k * 4 + t / 18 + 8)
 
       d[p % 3 + 142](
         s(p % 8 * (s(t / 70) + t / 179)) * 52 + x * u * 52 + 120,
         s(p % 8 * (s(t / 79) + t / 170)) * 52 + y * u * 52 + 68,
-        a * math.atan(math.max(u * (x ^ 2 + y ^ 2) ^ .5 - 1, r * s(p // 3 * k * 4 + t / 18)) * 10) * d[-2] / 4 - 1,
+        a * math.atan(
+          math.max(
+            u * (x ^ 2 + y * y) ^ .5 - 1,
+            (1 - y * y) ^ .5 * s(p // 3 * k * 4 + t / 18)
+          ) * 10
+        ) * d[-2] / 4 - 1,
         -a)
     end
     d[144 - (n & 2)]((.5 - n % 2) * (d[0] - 6) * u * 52 + 120, 0, u * 10, -a)
