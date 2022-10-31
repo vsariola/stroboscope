@@ -10,7 +10,8 @@ customized [crackle-tracker](https://github.com/vsariola/crackle-tracker).
 
 Greets: psenough, jeenio, havoc, superogue, jobe, nesbox, dave84, TomCat,
 exoticorn, HellMood, ferris, Jin X, ttg, unlord, hannu, sensenstahl, Ped7g,
-ilmenit, and everyone at the Sizecoding discord!
+ilmenit, baze, Dresdenboy, Kuemmel, Harekiet, DrClaw, byteobserver, DevEd/AYCE
+and everyone at the Sizecoding discord!
 
 License: [MIT](LICENSE)
 
