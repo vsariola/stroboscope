@@ -13,3 +13,5 @@ exoticorn, HellMood, ferris, Jin X, ttg, unlord, hannu, sensenstahl, Ped7g,
 ilmenit, and everyone at the Sizecoding discord!
 
 License: [MIT](LICENSE)
+
+![Screenshot of the intro](screenshot.png)
