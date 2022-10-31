@@ -37,7 +37,8 @@ t = 0
 
 function TIC()
   --{
-  for k = 3, 0, -1 do
+  for a = 47, 0, -1 do
+    k = a % 4
     p = t // 896 -- orderlist pos
     poke(65896, 32) -- set chn 2 wave
     x = t << d[k + 104] -- envelope pos
@@ -52,6 +53,7 @@ function TIC()
     u = d[4 * d[p + 95] + 1 + t // 224 % 4]
 
     n = ((n - 1 - u // 2 * 2) * 7 // 6 + u + 1) * 12 // 7
+    --{
     sfx(
       k, -- channel k uses wave k
       8 -- global pitch:
@@ -63,11 +65,10 @@ function TIC()
       k,
       d[-k]-- stored envelope
     )
+    poke(16320 + a, 255 / (1 + 2 ^ (5 - s(a % 3 + p) - d[-3] / 5 - a / 5)) ^ 2)
+    --}
   end
   cls(3)
-  for k = 0, 47 do
-    poke(16320 + k, 255 / (1 + 2 ^ (5 - s(k % 3 + p) - d[-3] / 5 - k / 5)) ^ 2)
-  end
   --}
   d[p % 3 + 142](
     s(p % 8 * (s(t / 70) + t / 179)) * 52 + 120,
