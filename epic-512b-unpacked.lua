@@ -48,7 +48,7 @@ function TIC()
     -- save envelopes for syncs
     -- d[0] = chn 0, d[-1] = chn 1...
     -- % ensures if n=0|pat=0 then env=0
-    d[-k] = -x % 14 % (16 * n * d[9 * k + p + 106] + 1)
+    d[-k] = n * d[9 * k + p + 106] // -52 * x % 14
     u = d[4 * d[p + 95] + 1 + t // 224 % 4]
 
     n = ((n - 1 - u // 2 * 2) * 7 // 6 + u + 1) * 12 // 7
