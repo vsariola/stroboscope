@@ -12,10 +12,11 @@ Tested with TIC-80 1.0.2164 pro. Packed with
 [pakettic](https://github.com/vsariola/pakettic). Music tracked with slightly
 customized [crackle-tracker](https://github.com/vsariola/crackle-tracker).
 
-Greets: psenough, jeenio, havoc, superogue, jobe, nesbox, dave84, TomCat,
-exoticorn, HellMood, ferris, Jin X, ttg, unlord, hannu, sensenstahl, Ped7g,
-ilmenit, baze, Dresdenboy, Kuemmel, Harekiet, DrClaw, byteobserver, DevEd/AYCE
-and everyone at the Sizecoding discord!
+Greets to psenough, jeenio, havoc, superogue, HellMood, jobe, nesbox, dave84,
+TomCat, exoticorn, ferris, Jin X, ttg, unlord, gopher, okkie, Řrřola, hannu,
+wrighter, Dresdenboy, aldroid, baze, noby, p01, PoroCYon, byteobserver,
+sensenstahl, Virgill, Ped7g, gasman, LJ, ilmenit, deater and everyone at the
+Sizecoding discord!
 
 License: [MIT](LICENSE)
 
