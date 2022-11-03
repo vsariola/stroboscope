@@ -46,12 +46,12 @@ Technical:
     the diatonic scale back to semitones.
   - The "transpose" in crackle tracker is added before this mapping, so it
     effectively is not just transposing a melody, but changing the mode the
-    melody is played in (some kind of... modal mdulation I guess?). This allows
+    melody is played in (some kind of... modal modulation I guess?). This allows
     same melody sound e.g. major or minor, depending of the current mode.
     Effectively, it's controlling how hands are moved left or right on the white
     keys of the piano. The melody contains mostly notes 1, 3 and 5 of the scale
-    (and some passing notes), to better highlight the underlying major/minor
-    chord.
+    (and some passing notes), to better highlight the major/minor quality of the
+    mode.
   - Additionally, instead of just moving hands, when changing the mode, we do
     necessary inversions to the melody, to keep the keys used roughly in the
     same octave as before the modulation.
